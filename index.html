@@ -1,155 +1,177 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Heart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart</title>
 
-<style>
-body {
-    margin: 0;
-    height: 100vh;
-    background: #111;
-    font-family: Arial;
-    overflow: hidden;
-}
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #111;
+            font-family: Arial;
+            overflow: hidden;
+        }
 
-.heart-text {
-    position: absolute;
-    color: #ff69b4;
-    font-weight: bold;
-    white-space: nowrap;
-    text-shadow: 0 0 5px #ff69b4,
-                 0 0 10px #ff69b4,
-                 0 0 20px #ff69b4;
-}
+        .heart-text {
+            position: absolute;
+            color: #ff69b4;
+            font-weight: bold;
+            white-space: nowrap;
+            text-shadow: 0 0 5px #ff69b4,
+                0 0 10px #ff69b4,
+                0 0 20px #ff69b4;
+        }
 
-button {
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    padding:20px 40px;
-    font-size:22px;
-    border:none;
-    border-radius:50px;
-    background:#ff69b4;
-    color:white;
-    cursor:pointer;
-    box-shadow:0 0 20px #ff69b4;
-    transition:0.3s;
-    z-index:2000;
-}
+        button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 22px;
+            border: none;
+            border-radius: 50px;
+            background: #ff69b4;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff69b4;
+            transition: 0.3s;
+            z-index: 2000;
+        }
 
-button:hover {
-    transform:translate(-50%,-50%) scale(1.1);
-}
+        button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
 
-/* กล่องวิดีโอ */
-#videoContainer {
-    position:absolute;
-    transform:translate(-50%,-50%) scale(0);
-    z-index:1500;
-    transition:0.5s;
-}
+        /* กล่องวิดีโอ */
+        #videoContainer {
+            position: absolute;
+            transform: translate(-50%, -50%) scale(0);
+            z-index: 1500;
+            transition: 0.6s ease;
 
-#videoContainer video {
-    width:min(70vw, 320px);
-    border-radius:25px;
-    box-shadow:0 0 40px #ff69b4;
-}
-</style>
+            padding: 8px;
+            border-radius: 30px;
+
+            /* glow ขอบ */
+            background: linear-gradient(45deg, #ff69b4, #ff99cc);
+            box-shadow: 0 0 40px #ff69b4,
+                0 0 80px #ff69b4;
+        }
+
+        #videoContainer video {
+            width: min(80vw, 320px);
+            border-radius: 25px;
+            display: block;
+
+            /* เบลอด้านหลัง */
+            backdrop-filter: blur(8px);
+        }
+
+        #videoContainer::before {
+            content: "";
+            position: absolute;
+            inset: -15px;
+            background: radial-gradient(circle, #ff69b455, transparent);
+            filter: blur(20px);
+            z-index: -1;
+        }
+    </style>
 </head>
 
 <body>
 
-<button onclick="showVideo()">กดตรงนี้ ❤️</button>
+    <button onclick="showVideo()">กดตรงนี้ ❤️</button>
 
-<div id="videoContainer">
-    <video id="loveVideo" controls>
-        <source src="25690105_163841_008.mp4" type="video/mp4">
-    </video>
-</div>
+    <div id="videoContainer">
+        <video id="loveVideo" controls>
+            <source src="25690105_163841_008.mp4" type="video/mp4">
+        </video>
+    </div>
 
-<script>
+    <script>
 
-const total = 90;
-const texts = [];
+        const total = 90;
+        const texts = [];
 
-let offsetX;
-let offsetY;
-let scale;
+        let offsetX;
+        let offsetY;
+        let scale;
 
-let heartCenterX;
-let heartCenterY;
+        let heartCenterX;
+        let heartCenterY;
 
-function updateCenter(){
-    offsetX = window.innerWidth / 2;
-    offsetY = window.innerHeight / 2;
+        function updateCenter() {
+            offsetX = window.innerWidth / 2;
+            offsetY = window.innerHeight / 2;
 
-    scale = Math.min(window.innerWidth, window.innerHeight) / 38;
+            scale = Math.min(window.innerWidth, window.innerHeight) / 38;
 
-    heartCenterX = offsetX;
-    heartCenterY = offsetY + (scale * 1.8);
-}
+            heartCenterX = offsetX;
+            heartCenterY = offsetY + (scale * 1.8);
+        }
 
-updateCenter();
-window.addEventListener("resize", updateCenter);
+        updateCenter();
+        window.addEventListener("resize", updateCenter);
 
-for(let i=0;i<total;i++){
-    const span = document.createElement("span");
-    span.className = "heart-text";
-    span.innerText = "I love you";
-    document.body.appendChild(span);
-    texts.push(span);
-}
+        for (let i = 0; i < total; i++) {
+            const span = document.createElement("span");
+            span.className = "heart-text";
+            span.innerText = "I love you";
+            document.body.appendChild(span);
+            texts.push(span);
+        }
 
-function animateHeart(){
+        function animateHeart() {
 
-    const t = Date.now()/1000;
-    const rotation = t * 0.4;
+            const t = Date.now() / 1000;
+            const rotation = t * 0.4;
 
-    texts.forEach((span,i)=>{
+            texts.forEach((span, i) => {
 
-        const angle = (i/total)*Math.PI*2 + rotation;
+                const angle = (i / total) * Math.PI * 2 + rotation;
 
-        const x = 16 * Math.pow(Math.sin(angle),3);
-        const y = 13*Math.cos(angle)
-                -5*Math.cos(2*angle)
-                -2*Math.cos(3*angle)
-                -Math.cos(4*angle);
+                const x = 16 * Math.pow(Math.sin(angle), 3);
+                const y = 13 * Math.cos(angle)
+                    - 5 * Math.cos(2 * angle)
+                    - 2 * Math.cos(3 * angle)
+                    - Math.cos(4 * angle);
 
-        span.style.left = offsetX + x * scale + "px";
-        span.style.top  = offsetY - y * scale + "px";
-        span.style.fontSize = scale + "px";
-    });
+                span.style.left = offsetX + x * scale + "px";
+                span.style.top = offsetY - y * scale + "px";
+                span.style.fontSize = scale + "px";
+            });
 
-    requestAnimationFrame(animateHeart);
-}
+            requestAnimationFrame(animateHeart);
+        }
 
-function showVideo(){
+        function showVideo() {
 
-    document.querySelector("button").style.display = "none";
+            document.querySelector("button").style.display = "none";
 
-    // texts.forEach(span => span.style.display = "none");
+            // texts.forEach(span => span.style.display = "none");
 
-    const box = document.getElementById("videoContainer");
+            const box = document.getElementById("videoContainer");
 
-    box.style.left = heartCenterX + "px";
-    box.style.top  = heartCenterY + "px";
+            box.style.left = heartCenterX + "px";
+            box.style.top = heartCenterY + "px";
 
-    box.style.display = "block";
+            box.style.display = "block";
 
-    setTimeout(()=>{
-        box.style.transform = "translate(-50%,-50%) scale(1)";
-    },10);
+            setTimeout(() => {
+                box.style.transform = "translate(-50%,-50%) scale(1)";
+            }, 10);
 
-    document.getElementById("loveVideo").play();
-}
+            document.getElementById("loveVideo").play();
+        }
 
-animateHeart();
+        animateHeart();
 
-</script>
+    </script>
 
 </body>
+
 </html>
