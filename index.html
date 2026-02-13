@@ -6,28 +6,70 @@
 <title>Heart</title>
 
 <style>
-
-body{
-    margin:0;
-    background:#111;
-    overflow:hidden;
+body {
+    margin: 0;
+    height: 100vh;
+    background: #111;
     font-family: Arial;
+    overflow: hidden;
 }
 
-.heart-text{
+.heart-text {
+    position: absolute;
+    color: #ff69b4;
+    font-weight: bold;
+    white-space: nowrap;
+    text-shadow: 0 0 5px #ff69b4,
+                 0 0 10px #ff69b4,
+                 0 0 20px #ff69b4;
+}
+
+button {
     position:absolute;
-    color:#ff69b4;
-    font-weight:bold;
-    white-space:nowrap;
-    text-shadow:0 0 5px #ff69b4,
-                0 0 10px #ff69b4,
-                0 0 20px #ff69b4;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    padding:20px 40px;
+    font-size:22px;
+    border:none;
+    border-radius:50px;
+    background:#ff69b4;
+    color:white;
+    cursor:pointer;
+    box-shadow:0 0 20px #ff69b4;
+    transition:0.3s;
+    z-index:2000;
 }
 
+button:hover {
+    transform:translate(-50%,-50%) scale(1.1);
+}
+
+/* กล่องวิดีโอ */
+#videoContainer {
+    position:absolute;
+    transform:translate(-50%,-50%) scale(0);
+    z-index:1500;
+    transition:0.5s;
+}
+
+#videoContainer video {
+    width:min(70vw, 320px);
+    border-radius:25px;
+    box-shadow:0 0 40px #ff69b4;
+}
 </style>
 </head>
 
 <body>
+
+<button onclick="showVideo()">กดตรงนี้ ❤️</button>
+
+<div id="videoContainer">
+    <video id="loveVideo" controls>
+        <source src="25690105_163841_008.mp4" type="video/mp4">
+    </video>
+</div>
 
 <script>
 
@@ -38,27 +80,26 @@ let offsetX;
 let offsetY;
 let scale;
 
-// ฟังก์ชันคำนวณตำแหน่งกลางจอ + ปรับขนาดตามจอ
+let heartCenterX;
+let heartCenterY;
+
 function updateCenter(){
     offsetX = window.innerWidth / 2;
     offsetY = window.innerHeight / 2;
 
     scale = Math.min(window.innerWidth, window.innerHeight) / 38;
+
+    heartCenterX = offsetX;
+    heartCenterY = offsetY + (scale * 1.8);
 }
 
-// เรียกครั้งแรก
 updateCenter();
-
-// เวลาหมุนหน้าจอหรือเปลี่ยนขนาด
 window.addEventListener("resize", updateCenter);
 
-// สร้างข้อความ
 for(let i=0;i<total;i++){
-
     const span = document.createElement("span");
     span.className = "heart-text";
     span.innerText = "I love you";
-
     document.body.appendChild(span);
     texts.push(span);
 }
@@ -70,7 +111,7 @@ function animateHeart(){
 
     texts.forEach((span,i)=>{
 
-        const angle = (i/total) * Math.PI * 2 + rotation;
+        const angle = (i/total)*Math.PI*2 + rotation;
 
         const x = 16 * Math.pow(Math.sin(angle),3);
         const y = 13*Math.cos(angle)
@@ -80,13 +121,30 @@ function animateHeart(){
 
         span.style.left = offsetX + x * scale + "px";
         span.style.top  = offsetY - y * scale + "px";
-
-        // ปรับขนาดข้อความตามจอ
-        span.style.fontSize = (scale) + "px";
-
+        span.style.fontSize = scale + "px";
     });
 
     requestAnimationFrame(animateHeart);
+}
+
+function showVideo(){
+
+    document.querySelector("button").style.display = "none";
+
+    // texts.forEach(span => span.style.display = "none");
+
+    const box = document.getElementById("videoContainer");
+
+    box.style.left = heartCenterX + "px";
+    box.style.top  = heartCenterY + "px";
+
+    box.style.display = "block";
+
+    setTimeout(()=>{
+        box.style.transform = "translate(-50%,-50%) scale(1)";
+    },10);
+
+    document.getElementById("loveVideo").play();
 }
 
 animateHeart();
