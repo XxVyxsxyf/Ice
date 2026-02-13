@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Heart</title>
+
+<style>
+
+body{
+    margin:0;
+    background:#111;
+    overflow:hidden;
+    font-family: Arial;
+}
+
+.heart-text{
+    position:absolute;
+    color:#ff69b4;
+    font-weight:bold;
+    white-space:nowrap;
+    text-shadow:0 0 5px #ff69b4,
+                0 0 10px #ff69b4,
+                0 0 20px #ff69b4;
+}
+
+</style>
+</head>
+
+<body>
+
+<script>
+
+const total = 90;
+const texts = [];
+
+let offsetX;
+let offsetY;
+let scale;
+
+// ฟังก์ชันคำนวณตำแหน่งกลางจอ + ปรับขนาดตามจอ
+function updateCenter(){
+    offsetX = window.innerWidth / 2;
+    offsetY = window.innerHeight / 2;
+
+    scale = Math.min(window.innerWidth, window.innerHeight) / 38;
+}
+
+// เรียกครั้งแรก
+updateCenter();
+
+// เวลาหมุนหน้าจอหรือเปลี่ยนขนาด
+window.addEventListener("resize", updateCenter);
+
+// สร้างข้อความ
+for(let i=0;i<total;i++){
+
+    const span = document.createElement("span");
+    span.className = "heart-text";
+    span.innerText = "I love you";
+
+    document.body.appendChild(span);
+    texts.push(span);
+}
+
+function animateHeart(){
+
+    const t = Date.now()/1000;
+    const rotation = t * 0.4;
+
+    texts.forEach((span,i)=>{
+
+        const angle = (i/total) * Math.PI * 2 + rotation;
+
+        const x = 16 * Math.pow(Math.sin(angle),3);
+        const y = 13*Math.cos(angle)
+                -5*Math.cos(2*angle)
+                -2*Math.cos(3*angle)
+                -Math.cos(4*angle);
+
+        span.style.left = offsetX + x * scale + "px";
+        span.style.top  = offsetY - y * scale + "px";
+
+        // ปรับขนาดข้อความตามจอ
+        span.style.fontSize = (scale) + "px";
+
+    });
+
+    requestAnimationFrame(animateHeart);
+}
+
+animateHeart();
+
+</script>
+
+</body>
+</html>
